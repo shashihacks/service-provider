@@ -1,0 +1,6 @@
+<p>User component!</p>
+
+<div class="btn btn-primary" (click)="login()">Login</div>
+<div class="container" *ngIf="user">
+    <p> Received Your data {{ user | json}}</p>
+</div>
