@@ -77,4 +77,11 @@ export class AuthenticationService {
     }
 
 
+    validateAndLoginSSO(params) {
+        this.http.post(`${environment.apiUrl}/api/sso-login`, { params }).subscribe(response => {
+            console.log(response)
+        })
+    }
+
+
 }

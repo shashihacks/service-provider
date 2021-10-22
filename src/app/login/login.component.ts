@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -10,6 +10,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 
 import { map } from 'rxjs/operators';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'app-login',
@@ -32,7 +33,8 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private http: HttpClient,
-    public authenticationService: AuthenticationService
+    public authenticationService: AuthenticationService,
+    @Inject(DOCUMENT) private document: Document
   ) {
 
   }
@@ -82,7 +84,6 @@ export class LoginComponent implements OnInit {
                 let userData
                 this.accountService.getUserData().subscribe(data => {
                   let firstName = data['firstName']
-                  window.location.href = redirectUrl + '?firstName=' + firstName
                 })
               }
               else {
@@ -99,6 +100,11 @@ export class LoginComponent implements OnInit {
 
     this.router.navigate(['/home'])
     this.form.reset()
+  }
+
+  ssoLogin() {
+    this.document.location.href = "http://localhost:4200/via_client?clientId=1234567890&redirectUrl=http://127.0.0.1:4000/sso"
+
   }
 }
 

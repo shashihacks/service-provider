@@ -11,12 +11,12 @@ const { sortAndDeduplicateDiagnostics } = require("typescript");
 const { response } = require("express");
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAzS8MmxAoTIZkh5hDj5kaEyIURWNpO3_w",
-  authDomain: "pufs-f13d7.firebaseapp.com",
-  projectId: "pufs-f13d7",
-  storageBucket: "pufs-f13d7.appspot.com",
-  messagingSenderId: "1067723588014",
-  appId: "1:1067723588014:web:6c5d531b3baa2fd4f7083f",
+  apiKey: "AIzaSyBOqcet8hmWmptQij-hrZZErIlC_f154Z0",
+  authDomain: "provider-5ec04.firebaseapp.com",
+  projectId: "provider-5ec04",
+  storageBucket: "provider-5ec04.appspot.com",
+  messagingSenderId: "178462838863",
+  appId: "1:178462838863:web:6a6ac0ba4fced48bb2da3a",
 };
 
 // Initialize Firebase
@@ -219,4 +219,8 @@ app.post("/api/userdata", authenticateToken, async (req, res) => {
   res.send(userData);
 });
 
-app.listen(3000);
+app.post("/api/sso-login", async (req, res) => {
+  console.log(req.body, "SSO details of users received");
+});
+
+app.listen(3001);

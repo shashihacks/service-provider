@@ -34,9 +34,13 @@
             <!-- Sign in button -->
             <button mdbBtn color="info" block="true" class="my-4" type="submit">Sign in</button>
 
-            <p *ngIf="authenticationService.loginResponse" class="text-danger">
+            <button mdbBtn color="info" block="true" class="mb-2 btn btn-secondary" (click)="ssoLogin()">Sign in with
+                IDP</button>
+
+
+            <!-- <p *ngIf="authenticationService.loginResponse" class="text-danger">
                 {{this.authenticationService.loginResponse}}
-            </p>
+            </p> -->
 
             <!-- Register -->
             <p>Not a member?

@@ -30,6 +30,7 @@ import { DataComponent } from './data/data.component';
 
 import { JwtModule } from '@auth0/angular-jwt';
 import { LoginWithPufComponent } from './login-with-puf/login-with-puf.component';
+import { SsoComponent } from './sso/sso.component';
 export function tokenGetter() {
   return localStorage.getItem('access_token');
 }
@@ -42,7 +43,9 @@ export function tokenGetter() {
     NavigationComponent,
     HomeComponent,
     DataComponent,
-    LoginWithPufComponent
+    LoginWithPufComponent,
+    SsoComponent,
+
   ],
   imports: [
     BrowserModule,
