@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 
@@ -15,6 +15,7 @@ export class AuthenticationService {
     private currentUserSubject: BehaviorSubject<any>;
     public currentUser: Observable<any>;
     public returnUrl: string
+    responseSubject: Subject<Object>;
     constructor(private http: HttpClient, private router: Router, private db: AngularFirestore) {
         this.currentUserSubject = new BehaviorSubject(localStorage.getItem('accessToken'));
         this.currentUser = this.currentUserSubject.asObservable();
@@ -77,10 +78,22 @@ export class AuthenticationService {
     }
 
 
-    validateAndLoginSSO(params) {
+    validateAndLoginSSO(params): Observable<Object> {
+        this.responseSubject = new Subject<Object>();
         this.http.post(`${environment.apiUrl}/api/sso-login`, { params }).subscribe(response => {
             console.log(response)
+
+            this.responseSubject.next(response)
+
         })
+        return this.responseSubject.asObservable()
+    }
+
+    loginAndRedirect(accessToken, refreshToken) {
+        localStorage.setItem('accessToken', refreshToken);
+        localStorage.setItem('refreshToken', accessToken);
+        this.currentUserSubject.next(accessToken);
+        this.router.navigate(['/settings'])
     }
 
 

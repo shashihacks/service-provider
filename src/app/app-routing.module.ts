@@ -7,6 +7,7 @@ import { HomeComponent } from './home/home.component';
 import { LoginWithPufComponent } from './login-with-puf/login-with-puf.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
+import { SettingsComponent } from './settings/settings.component';
 import { SsoComponent } from './sso/sso.component';
 
 const routes: Routes = [
@@ -19,7 +20,7 @@ const routes: Routes = [
   { path: 'sso/:firstName/:lastName/:email/:HMAC', component: SsoComponent, },
 
   { path: 'sso', component: SsoComponent, },
-
+  { path: 'settings', component: SettingsComponent, },
 
 
   // { path: 'via_idp/:id', component: IdpComponent, },

@@ -31,6 +31,7 @@ import { DataComponent } from './data/data.component';
 import { JwtModule } from '@auth0/angular-jwt';
 import { LoginWithPufComponent } from './login-with-puf/login-with-puf.component';
 import { SsoComponent } from './sso/sso.component';
+import { SettingsComponent } from './settings/settings.component';
 export function tokenGetter() {
   return localStorage.getItem('access_token');
 }
@@ -45,6 +46,7 @@ export function tokenGetter() {
     DataComponent,
     LoginWithPufComponent,
     SsoComponent,
+    SettingsComponent,
 
   ],
   imports: [

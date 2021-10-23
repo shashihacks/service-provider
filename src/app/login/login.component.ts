@@ -50,14 +50,6 @@ export class LoginComponent implements OnInit {
     })
 
 
-
-    this.route.queryParams.subscribe(params => {
-      const { redirectUrl, clientId } = params
-      console.log(redirectUrl, clientId)
-      if (redirectUrl && clientId)
-        this.reDirection = true
-    })
-
   }
   get f() { return this.form.controls; }
 

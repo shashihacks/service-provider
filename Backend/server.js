@@ -238,8 +238,9 @@ app.post("/api/sso-login", async (req, res) => {
 
   console.log(HMAC_calculated, HMAC);
   if (HMAC_calculated == HMAC) {
-    let response = createOrLoginAccountSSO(reOrderUserObj);
+    let response = await createOrLoginAccountSSO(reOrderUserObj);
     console.log(response);
+    res.send({ sendStatus: 200, data: response });
   } else {
     res.send({ sendStatus: 401, text: "Tampering detected" });
   }
@@ -248,9 +249,9 @@ app.post("/api/sso-login", async (req, res) => {
 async function createOrLoginAccountSSO(userObject) {
   console.log(userObject);
   if (await accountExistsSSO(userObject)) {
-    await loginUserSSO(userObject);
+    return await loginUserSSO(userObject);
   } else {
-    await registerAccountAndLoginSSO(userObject);
+    return await registerAccountAndLoginSSO(userObject);
   }
 }
 
