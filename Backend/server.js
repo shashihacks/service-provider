@@ -135,7 +135,7 @@ app.post("/api/login-with-puf", async (req, res) => {
 
   const { puf_token } = req.body;
   console.log(puf_token);
-  const { username } = generateUsername();
+  const username = generateUsername();
   console.log(username, "generated for user");
   const user = { name: username, puf_token: puf_token };
   console.log("user login requested with PUF");
@@ -184,7 +184,7 @@ async function getAccount(puf_token) {
   }
 }
 
-async function registerAccount(puf_token) {
+async function registerAccount(puf_token, response) {
   const data = {
     pufToken: puf_token,
     email: "",
@@ -195,11 +195,11 @@ async function registerAccount(puf_token) {
   // console.log(puf_token, data);
   const userRef = db.collection("users").doc(puf_token.toString());
   const res = await userRef.set(data);
-
+  console.log(res);
   // setTimeout(() => {
   //   console.log(res, "response from register Account");
   // }, 3000);
-  if (res) return true;
+  return true;
 }
 
 app.post("/api/userdata", authenticateToken, async (req, res) => {
