@@ -5,7 +5,7 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const jwt = require("jsonwebtoken");
-
+const crypto = require("crypto");
 const firebase = require("firebase");
 const { sortAndDeduplicateDiagnostics } = require("typescript");
 const { response } = require("express");
@@ -219,8 +219,73 @@ app.post("/api/userdata", authenticateToken, async (req, res) => {
   res.send(userData);
 });
 
+//SSO Login or register account
+
 app.post("/api/sso-login", async (req, res) => {
-  console.log(req.body, "SSO details of users received");
+  console.log(req.body.params, "SSO details of users received");
+  var params = req.body.params;
+  const key = "abcdef";
+  const { HMAC, ...clone } = params;
+  const reOrderUserObj = {
+    firstName: params["firstName"],
+    lastName: params["lastName"],
+    email: params["email"],
+  };
+  let HMAC_calculated = crypto
+    .createHmac("sha1", key)
+    .update(JSON.stringify(reOrderUserObj))
+    .digest("hex");
+
+  console.log(HMAC_calculated, HMAC);
+  if (HMAC_calculated == HMAC) {
+    let response = createOrLoginAccountSSO(reOrderUserObj);
+    console.log(response);
+  } else {
+    res.send({ sendStatus: 401, text: "Tampering detected" });
+  }
 });
 
+async function createOrLoginAccountSSO(userObject) {
+  console.log(userObject);
+  if (await accountExistsSSO(userObject)) {
+    await loginUserSSO(userObject);
+  } else {
+    await registerAccountAndLoginSSO(userObject);
+  }
+}
+
+async function accountExistsSSO(userObject) {
+  const { email } = userObject;
+  const userRef = db.collection("users").doc(email);
+  const doc = await userRef.get();
+  if (!doc.exists) {
+    console.log("No such document!");
+    return false;
+  } else {
+    return true;
+  }
+}
+
+function loginUserSSO(userObj) {
+  const { email, firstName, lastName } = userObj;
+  console.log(email);
+  const user = { email, firstName };
+  const accessToken = generateAccessToken(user);
+  const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
+  refreshTokens.push(refreshToken);
+  return {
+    accessToken: accessToken,
+    refreshToken: refreshToken,
+    text: "Login Success",
+  };
+}
+
+async function registerAccountAndLoginSSO(userObj) {
+  console.log("registeringSSO");
+  const { email } = userObj;
+  console.log(userObj, "in registartion");
+  const userRef = db.collection("users").doc(email);
+  const res = await userRef.set(userObj);
+  if (res) loginUserSSO(userObj);
+}
 app.listen(3001);
