@@ -22,6 +22,7 @@ export class SsoComponent implements OnInit {
       loginResponse.subscribe(response => {
         if (response['sendStatus'] == 200) {
           // const { data } = response['data']
+          console.log(response)
           const { accessToken, refreshToken } = response['data']
           console.log(response['data'])
           if (accessToken && refreshToken)
