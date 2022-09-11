@@ -66,7 +66,7 @@ app.post("/api/login", async (req, res) => {
   // Authenticate User
 
   const { email, password } = req.body;
-  console.log(email, password);
+  console.log(email, password, "got");
   const user = { name: email, password: password };
   // console.log("user login requested");
 
@@ -92,10 +92,16 @@ function generateAccessToken(user) {
 
 async function accountExists(user) {
   //check from db
-  // console.log(user, "checking user");
-  const { name: email, password } = user;
+  console.log(user, "checking user");
+  let { name: email, password } = user;
+  if (email == "") {
+    let randomMail = await generateUsername();
+    email += randomMail + "@serviceprovider.com";
+  }
+
   const userRef = db.collection("users").doc(email.toString());
   const doc = await userRef.get();
+  console.log(doc);
   if (!doc.exists) {
     console.log("No such document!");
     return false;
@@ -218,7 +224,7 @@ app.post("/api/sso-login", async (req, res) => {
   console.log(HMAC_calculated, HMAC);
   if (HMAC_calculated == HMAC) {
     let response = await createOrLoginAccountSSO(reOrderUserObj);
-    console.log(response);
+    console.log(response, "sendback");
     res.send({ sendStatus: 200, data: response });
   } else {
     res.send({ sendStatus: 401, text: "Tampering detected" });
@@ -247,6 +253,7 @@ async function accountExistsSSO(userObject) {
 }
 
 function loginUserSSO(userObj) {
+  console.log("received user object for login", userObj);
   const { email, firstName, lastName } = userObj;
   console.log(email);
   const user = { email, firstName };
@@ -257,6 +264,7 @@ function loginUserSSO(userObj) {
     accessToken: accessToken,
     refreshToken: refreshToken,
     text: "Login Success",
+    userObj: userObj,
   };
 }
 
